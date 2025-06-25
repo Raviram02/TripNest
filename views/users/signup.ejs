@@ -1,24 +1,42 @@
 <% layout("/layouts/boilerplate") %>
 <body>
-    <div class="row mt-3">
-        <div class="col-6 offset-3">
-            <h1>SignUp on WanderLust</h1>
-            <form action="/signup" method="POST" novalidate class="needs-validation">
-                <div class="mb-3">
-                    <label for="username" class="form-label">Username</lable>
-                    <input type="text" name="username" class="form-control" id="username" required>
-                    <div class="valid-feedback">Username looks good!</div>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</lable>
-                    <input type="email" name="email" class="form-control" id="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</lable>
-                    <input type="password" name="password" class="form-control" id="password" required>
-                </div>
-                <button class="btn btn-success">SignUp</button>
-            </form>
+  <div class="row mt-3">
+    <div class="col-md-6 offset-md-3">
+      <h1 class="mb-4">Signup</h1>
+      <form action="/signup" method="POST" novalidate class="needs-validation">
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="form-control w-100"
+            id="username"
+            required
+          />
+          <div class="valid-feedback">Username looks good!</div>
         </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            name="email"
+            class="form-control w-100"
+            id="email"
+            required
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="form-control w-100"
+            id="password"
+            required
+          />
+        </div>
+        <button class="btn btn-success w-100">SignUp</button>
+      </form>
     </div>
+  </div>
 </body>

@@ -1,16 +1,29 @@
 mapboxgl.accessToken = mapToken;
 
+// Initialize map
 const map = new mapboxgl.Map({
-    container: 'map', // container ID
+    container: 'map',
     style: 'mapbox://styles/mapbox/streets-v12',
-    center: listing.geometry.coordinates, // starting position [lng, lat]. Note that lat must be set between -90 and 90
-    zoom: 12 // starting zoom
+    center: listing.geometry.coordinates, // [lng, lat]
+    zoom: 12
 });
 
-const marker1 = new mapboxgl.Marker({ color: 'red'})
-        .setLngLat(listing.geometry.coordinates)
-        .setPopup(new mapboxgl.Popup({offset: 25}).setHTML(
-            `<br><h4>${listing.title}</h4><h6>You'll be here!</h6>`
-        ))
-        .addTo(map);
+// Add a single draggable marker at current coordinates
+const marker = new mapboxgl.Marker({ color: 'red', draggable: false })
+    .setLngLat(listing.geometry.coordinates)
+    .setPopup(
+        new mapboxgl.Popup({ offset: 25 }).setHTML(
+            `<h4>${listing.location}</h4><h6>Visit here to rent the vehicle!</h6>`
+        )
+    )
+    .addTo(map);
 
+// Update hidden inputs initially
+const latInput = document.getElementById('lat');
+const lngInput = document.getElementById('lng');
+if (latInput && lngInput) {
+    lngInput.value = listing.geometry.coordinates[0];
+    latInput.value = listing.geometry.coordinates[1];
+}
+
+// 🔒 Removed: No map click handler to prevent marker from moving

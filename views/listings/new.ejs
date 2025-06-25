@@ -4,41 +4,51 @@
     <div class="row mt-3">
         <div class="col-8 offset-2">
             <br>
-            <h3>Create a New Listing</h3>
+            <h3>Add Vehicle Details</h3>
             <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
                 <div class="mb-3">
-                    <label for="title" class="form-label">Title</lable>
+                    <label for="title" class="form-label">Title</label>
                     <input type="text" placeholder="Add a title" name="listing[title]" class="form-control" required>
-                    <div class="valid-feedback">Title looks good!</div>
+                    <div class="invalid-feedback">Please provide a title for your listing.</div>
                 </div>
+
                 <div class="mb-3">
-                    <lable for="description" class="form-label">Description</lable>
-                    <textarea name="listing[description]" placeholder="enter description" class="form-control" required></textarea>
-                    <div class="invalid-feedback">Please enter a short desciption</div>
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="listing[description]" placeholder="Enter description" class="form-control" required></textarea>
+                    <div class="invalid-feedback">A short description is required.</div>
                 </div>
-                 <div class="mb-3">
-                    <lable for="image" class="form-label">Upload Images</lable>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Upload Images</label>
                     <input type="file" name="listing[image]" class="form-control" required>
+                    <div class="invalid-feedback">Please upload one image of the vehicle.</div>
                 </div>
+
                 <div class="row">
                     <div class="mb-3 col-md-4">
-                        <lable for="price" class="form-label">Price</lable>
-                        <input placeholder="enter price per night" name="listing[price]" class="form-control" required>
-                        <div class="invalid-feedback">Price should be valid</div>
+                        <label for="price" class="form-label">Price</label>
+                        <input placeholder="Enter price per hour" name="listing[price]" class="form-control" required>
+                        <div class="invalid-feedback">Please enter a valid hourly price (e.g., 100).</div>
                     </div>
+
                     <div class="mb-3 col-md-8">
-                        <lable for="country" class="form-label">Country</lable>
-                        <input type="text" placeholder="enter country" name="listing[country]" class="form-control" required>
-                        <div class="invalid-feedback">Country name should be valid</div>
+                        <label for="type" class="form-label">Vehicle Type</label>
+                        <select name="listing[type]" class="form-select" required>
+                            <option value="" disabled selected>Select</option>
+                            <option value="Bike">Bike</option>
+                            <option value="Scooty">Scooty</option>
+                        </select>
+                        <div class="invalid-feedback">Selecting a vehicle type is required.</div>
                     </div>
                 </div>
-            
+
                 <div class="mb-3">
-                    <lable for="location" class="form-label">Location</lable>
-                    <input type="text" placeholder="enter location" name="listing[location]" class="form-control" required>  
-                    <div class="invalid-feedback">Location should be valid</div>
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" placeholder="Enter location" name="listing[location]" class="form-control" required>  
+                    <div class="invalid-feedback">Please provide a valid pickup location.</div>
                 </div>
-                <button class="btn btn-dark add-btn mt-3">Add</button>
+
+                <button class="btn btn-dark add-btn mt-3 mb-3">Add</button>
             </form>
         </div>
     </div>

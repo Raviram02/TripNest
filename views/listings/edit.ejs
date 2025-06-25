@@ -1,48 +1,131 @@
 <% layout("/layouts/boilerplate") %>
-<body>
-    <div class="row mt-3">
-        <div class="col-8 offset-2">
-            <br>
-            <h3>Edit this Listing</h3>
-            <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <lable for="title" class="form-label">Title</lable>
-                    <input type="text" value="<%= listing.title %>" name="listing[title]" class="form-control" required>
-                    <div class="valid-feedback">Title looks good!</div>
-                </div>
-                <div class="mb-3">
-                    <lable for="description" class="form-label">Description</lable>
-                    <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
-                    <div class="invalid-feedback">Please enter a short desciption</div>
-                </div>
-                 <div class="mb-3">
-                    Current Listing Image <br>
-                    <img src="<%= originalImageUrl %>">
-                </div>
-                <div class="mb-3">
-                    <lable for="image" class="form-label">Upload New  Image</lable>
-                    <input type="file"  name="listing[image]" class="form-control">
-                </div>
-                <div class="row">
-                    <div class="mb-3 col-4">
-                        <lable for="price" class="form-label">Price</lable>
-                        <input value="<%= listing.price %>" name="listing[price]" class="form-control" required>
-                        <div class="invalid-feedback">Price should be valid</div>
-                    </div>
-                    <div class="mb-3 col-8">
-                        <lable for="country" class="form-label">Country</lable>
-                        <input type="text" value="<%= listing.country %>" name="listing[country]" class="form-control" required>
-                        <div class="invalid-feedback">Country name should be valid</div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <lable for="location" class="form-label">Location</lable>
-                    <input type="text" value="<%= listing.location %>" name="listing[location]" class="form-control" required>
-                    <div class="invalid-feedback">Location should be valid</div>
-                </div>
-                <button class="btn btn-dark edit-btn mt-3">Edit</button>
-            </form>
+
+<style>
+  #map {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    .col-8.offset-2 {
+      width: 100% !important;
+      margin: 0 auto !important;
+    }
+
+    .row {
+      flex-direction: column;
+    }
+
+    .mb-3.col-4,
+    .mb-3.col-8 {
+      width: 100%;
+    }
+  }
+</style>
+
+
+<!-- Mapbox CSS -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet" />
+
+<div class="row mt-3">
+  <div class="col-8 offset-2">
+    <h3>Update Vehicle Details </h3>
+    <form method="POST" action="/listings/<%= listing._id %>?_method=PUT" enctype="multipart/form-data" novalidate class="needs-validation">
+      
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" value="<%= listing.title %>" name="listing[title]" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="description" class="form-label">Description</label>
+        <textarea name="listing[description]" class="form-control" required><%= listing.description %></textarea>
+      </div>
+
+      <div class="mb-3">
+        Current Listing Image <br />
+        <img src="<%= listing.image.url %>" style="max-height: 150px" />
+      </div>
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Upload New Image</label>
+        <input type="file" name="listing[image]" class="form-control" />
+      </div>
+
+      <div class="row">
+        <div class="mb-3 col-4">
+          <label for="price" class="form-label">Price</label>
+          <input value="<%= listing.price %>" name="listing[price]" class="form-control" required />
         </div>
-    </div>
-    
-</body>
+        <div class="mb-3 col-8">
+          <label for="type" class="form-label">Vehicle Type</label>
+          <input type="text" value="<%= listing.type %>" name="listing[type]" class="form-control" required />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" value="<%= listing.location %>" name="listing[location]" class="form-control" required />
+      </div>
+
+      <!-- Hidden inputs for lat/lng -->
+      <input type="hidden" id="lng" name="listing[geometry][lng]" value="<%= listing.geometry.coordinates[0] %>" />
+      <input type="hidden" id="lat" name="listing[geometry][lat]" value="<%= listing.geometry.coordinates[1] %>" />
+
+      <!-- Map container -->
+      <div class="mb-4">
+        <label for="map" class="form-label">Select Location on Map</label>
+        <div id="map" style="height: 400px; border-radius: 8px;"></div>
+      </div>
+
+      <button class="btn btn-dark save-btn mb-3">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+
+<script>
+  const mapToken = "<%= process.env.MAP_TOKEN %>";
+  const listing = <%- JSON.stringify(listing) %>;
+</script>
+
+<script>
+  mapboxgl.accessToken = mapToken;
+
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: "mapbox://styles/mapbox/streets-v12",
+    center: listing.geometry.coordinates,
+    zoom: 13,
+  });
+
+  map.addControl(new mapboxgl.NavigationControl());
+
+  // Show existing marker (red)
+  let marker = new mapboxgl.Marker({ color: "red" })
+    .setLngLat(listing.geometry.coordinates)
+    .addTo(map);
+
+  // Update on map click
+  map.on("click", (e) => {
+    const { lng, lat } = e.lngLat;
+
+    // Remove old marker
+    if (marker) marker.remove();
+
+    // Add new marker (blue)
+    marker = new mapboxgl.Marker({ color: "blue" })
+      .setLngLat([lng, lat])
+      .addTo(map);
+
+    // Update hidden inputs
+    document.getElementById("lng").value = lng;
+    document.getElementById("lat").value = lat;
+  });
+</script>
